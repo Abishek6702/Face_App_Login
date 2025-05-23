@@ -45,7 +45,7 @@ export default function SignUp() {
         password,
         descriptors,
       });
-      toast.success("Login successful!");
+      toast.success("SignUp successful!");
       setTimeout(() => navigate("/"), 1500);
       setDescriptors([]);
       navigate("/");
