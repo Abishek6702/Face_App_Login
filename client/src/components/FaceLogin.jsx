@@ -3,6 +3,7 @@ import * as faceapi from "face-api.js";
 
 export default function FaceLogin({ onLogin }) {
   const videoRef = useRef(null);
+  const mediaStreamRef = useRef(null);
   const [status, setStatus] = useState("Loading models...");
 
   useEffect(() => {
@@ -14,6 +15,11 @@ export default function FaceLogin({ onLogin }) {
       startVideo();
     };
     loadModelsAndStartVideo();
+
+    // Cleanup on unmount
+    return () => {
+      stopVideo();
+    };
   }, []);
 
   const startVideo = () => {
@@ -21,8 +27,19 @@ export default function FaceLogin({ onLogin }) {
       .getUserMedia({ video: {} })
       .then((stream) => {
         videoRef.current.srcObject = stream;
+        mediaStreamRef.current = stream;
       })
       .catch((err) => setStatus("Camera error: " + err));
+  };
+
+  const stopVideo = () => {
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach(track => track.stop());
+      mediaStreamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   };
 
   const handleLogin = async () => {
@@ -34,6 +51,7 @@ export default function FaceLogin({ onLogin }) {
 
     if (detection) {
       setStatus("Face detected! Authenticating...");
+      stopVideo(); 
       onLogin(Array.from(detection.descriptor));
     } else {
       setStatus("No face detected. Try again.");

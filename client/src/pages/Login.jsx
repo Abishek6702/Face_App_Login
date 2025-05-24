@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import FaceLogin from "../components/faceLogin";
@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
+    const videoRef = useRef(null); 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -27,14 +28,16 @@ export default function Login() {
         "user",
         JSON.stringify({ email: res.data.email, token: res.data.token })
       );
-
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
       toast.success("Login successful!");
       setTimeout(() => navigate("/dashboard"), 1500);
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-       toast.error("Login failed!!");
-      setTimeout( 1500);
+      toast.error("Login failed!!");
+      setTimeout(1500);
     }
   };
 
@@ -49,7 +52,9 @@ export default function Login() {
         "user",
         JSON.stringify({ email: res.data.email, token: res.data.token })
       );
-
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
       toast.success("Login successful!");
       setTimeout(() => navigate("/dashboard"), 1500);
       setShowFaceLogin(false);
@@ -57,7 +62,7 @@ export default function Login() {
     } catch (err) {
       console.error("Face login error:", err);
       toast.error("Login failed!!");
-      setTimeout( 1500);
+      setTimeout(1500);
     }
   };
 
@@ -182,7 +187,9 @@ export default function Login() {
                   Create Now
                 </a>
               </div>
-              <div className="mt-2 text-green-700 text-center hidden">{message}</div>
+              <div className="mt-2 text-green-700 text-center hidden">
+                {message}
+              </div>
             </>
           ) : (
             <div>
@@ -211,11 +218,13 @@ export default function Login() {
               >
                 login with user credentials
               </button>
-              <div className="mt-2 text-green-700 text-center hidden">{message}</div>
+              <div className="mt-2 text-green-700 text-center hidden">
+                {message}
+              </div>
             </div>
           )}
         </div>
-        <div className="hidden lg:flex w-[50%] flex flex-col justify-center items-center text-white text-center p-8 space-y-4">
+        <div className="hidden lg:flex w-[50%]  flex-col justify-center items-center text-white text-center p-8 space-y-4">
           <div className="text-3xl font-semibold">
             Stay connected with us by logging in with your personal details.
           </div>

@@ -225,7 +225,7 @@ export default function SignUp() {
             </a>
           </div>
         </div>
-        <div className="hidden lg:block w-[50%]  flex flex-col justify-center items-center text-white text-center p-8 space-y-4 z-10 m-auto">
+        <div className="hidden lg:flex w-[50%]   flex-col justify-center items-center text-white text-center p-8 space-y-4 z-10 m-auto">
           <div className="text-3xl font-semibold">
             Stay connected with us by logging in with your personal details.
           </div>
